@@ -1,3 +1,5 @@
+# naive pretty print for S-exp like structure.
+
 import sys
 import io
 
