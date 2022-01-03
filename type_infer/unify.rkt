@@ -65,26 +65,24 @@
 
 (define (subst-compose theta eta)
     (letrec
-        ((rho '())
-        (compose-a (lambda (var val)
+        ((compose-a (lambda (var val)
             (let ((new (instantiate val eta)))
                 (if (not (equal? var new))
-                    (set! rho
-                        (cons (make-binding var new) rho))
+                    (make-binding var new)
                     #f))))
         (compose-b (lambda (var val)
             (let ((foo (get-binding var theta)))
                 (if (null? foo)
-                    (set! rho
-                        (cons (make-binding var val) rho))
+                    (make-binding var val)
                     #f)))))
-        (for-each
-            (lambda (x) (compose-a (get-var x) (get-val x)))
-            theta)
-        (for-each
-            (lambda (x) (compose-b (get-var x) (get-val x)))
-            eta)
-        rho))
+
+        (append 
+            (remove (lambda (v) (eq? v #f)) 
+                    (map (lambda (x) (compose-a (get-var x) (get-val x))) 
+                        theta))
+            (remove (lambda (v) (eq? v #f)) 
+                    (map (lambda (x) (compose-b (get-var x) (get-val x))) 
+                        eta)))))
 
 (define (unify p q)
     (letrec 
