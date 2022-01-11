@@ -10,7 +10,7 @@ def context_path(trace : list[ParserRuleContext]) -> str:
                         .replace("'>","") for t in trace])
 
 def to_str(tree : ParserRuleContext) -> str:
-    return f"depth={tree.depth},type={tree.type},text={tree.text}" + \
+    return f"type={type(tree)},text={tree.getText()}" + \
             f",start={tree.start},stop={tree.stop}"
 
 class ParseContextItem:
@@ -87,6 +87,7 @@ def main(argv):
         depth = mem.depth
 
         indent = ' ' * depth
+        print('{}{}'.format(indent, context_path(mem.trace) + ',' + to_str(tree)))
         print('{}{}'.format(indent, type(tree)))
         print('{}{}'.format(indent, tree.getText()))
         print('{}{}'.format(indent, tree.start))
