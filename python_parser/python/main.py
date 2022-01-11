@@ -37,7 +37,7 @@ class ParseContextItem:
         return to_str(self.tree)
         
 class TrMem:
-    def __init__(self, func, trace = None) -> None:
+    def __init__(self, func = None, trace = None) -> None:
         if trace != None:
             self.trace = trace
         else:
