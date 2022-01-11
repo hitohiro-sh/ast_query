@@ -7,7 +7,7 @@ from Python3Parser import Python3Parser
 def context_path(trace : list[ParserRuleContext]) -> str:
     return "/".join([str(type(t)).replace("Python3Parser.Python3Parser.","") \
                         .replace("<class '", "") \
-                        .replace("'>","") for t in trace])
+                        .replace("'>","") + ":{}:{}".format(t.start.line, t.stop.line) for t in trace])
 
 def to_str(tree : ParserRuleContext) -> str:
     return f"type={type(tree)},text={tree.getText()}" + \
