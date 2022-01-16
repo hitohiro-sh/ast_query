@@ -1,4 +1,6 @@
 import sys
+import json
+
 from antlr4 import *
 #from antlr4 import 
 from Python3Lexer import Python3Lexer
@@ -9,9 +11,23 @@ def context_path(trace : list[ParserRuleContext]) -> str:
                         .replace("<class '", "") \
                         .replace("'>","") + ":{}:{}".format(t.start.line, t.stop.line) for t in trace])
 
-def to_str(tree : ParserRuleContext) -> str:
+
+def context_path_to_list(trace : list[ParserRuleContext]) -> str:
+    return [str(type(t)).replace("Python3Parser.Python3Parser.","") \
+                        .replace("<class '", "") \
+                        .replace("'>","") + ":{}:{}".format(t.start.line, t.stop.line) for t in trace]
+
+def tree_to_str(tree : ParserRuleContext) -> str:
     return f"type={type(tree)},text={tree.getText()}" + \
             f",start={tree.start},stop={tree.stop}"
+
+def tree_to_dict(tree : ParserRuleContext) -> str:
+    return {
+        "type": f"{type(tree)}",
+        "text": f"{tree.getText()}",
+        "start": f"{tree.start}",
+        "stop": f"{tree.stop}",
+    }
 
 class ParseContextItem:
     def __init__(self, tree : ParserRuleContext, depth : int) -> None:
@@ -80,19 +96,35 @@ def main(argv):
     stream = CommonTokenStream(lexer)
     parser = Python3Parser(stream)
     tree = parser.file_input()
+
+    if len(argv) > 2:
+        o_type = argv[2]
+    else:
+        o_type = "text"
     
-    def f(mem):
+    def f_json(mem):
         tree = mem.tree
         depth = mem.depth
 
+        #indent = ' ' * depth
+        print(json.dumps([{"indent": depth, "context_path": context_path_to_list(mem.trace)},tree_to_dict(tree)]))        
+
+    def f(mem):
+        tree = mem.tree
+        depth = mem.depth
+        #depth = 0
+
         indent = ' ' * depth
-        print('{}{}'.format(indent, context_path(mem.trace) + ',' + to_str(tree)))
+        print('{}{}'.format(indent, context_path(mem.trace) + ',' + json.dumps(tree_to_dict(tree))))
         #print('{}{}'.format(indent, type(tree)))
         #print('{}{}'.format(indent, tree.getText()))
         #print('{}{}'.format(indent, tree.start))
         #print('{}{}'.format(indent, tree.stop))
 
-    mem = TrMem(f)
+    if o_type == "json":
+        mem = TrMem(f_json)
+    elif o_type == "text":
+        mem = TrMem(f)
 
     tr(tree, 0, mem)
  
