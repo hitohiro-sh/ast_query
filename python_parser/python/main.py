@@ -64,7 +64,6 @@ class TrMem:
 
 def tr(tree, depth, mem : TrMem):
     if not isinstance(tree, TerminalNode):
-        #if isinstance(func, TrMem):
         mem.set(tree, depth)
         mem.call_func()
         #func(type(tree), depth)
@@ -88,10 +87,10 @@ def main(argv):
 
         indent = ' ' * depth
         print('{}{}'.format(indent, context_path(mem.trace) + ',' + to_str(tree)))
-        print('{}{}'.format(indent, type(tree)))
-        print('{}{}'.format(indent, tree.getText()))
-        print('{}{}'.format(indent, tree.start))
-        print('{}{}'.format(indent, tree.stop))
+        #print('{}{}'.format(indent, type(tree)))
+        #print('{}{}'.format(indent, tree.getText()))
+        #print('{}{}'.format(indent, tree.start))
+        #print('{}{}'.format(indent, tree.stop))
 
     mem = TrMem(f)
 
