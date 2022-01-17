@@ -25,8 +25,37 @@ def config(argv):
         pattern = re.compile(pattern)
 
         comp_func = lambda line: re.search(pattern, line)
-    else:
-        pattern = argv[1]
+    elif len(argv) > 1 and argv[1] == '-l':
+        vs = argv[2].split(':')
+        if len(vs) == 1:
+            start = stop = int(vs[0])
+        elif len(vs) == 2:
+            if vs[0] != '':
+                start = int(vs[0])
+            else:
+                start = -1
+            if vs[1] != '':
+                stop = int(vs[1])
+            else:
+                stop = -1
+        pattern = re.compile(".+:(\d+):(\d+),")
+
+        def search_line(line):
+            m = re.search(pattern, line)
+            if m:
+                vs2 = m.groups()
+                cur_start = int(vs2[0])
+                cur_stop = int(vs2[1])
+                if start < 0:
+                    return cur_stop <= stop
+                if stop < 0:
+                    return start <= cur_start
+                return start <= cur_start and cur_stop <= stop
+            else:
+                return False
+        comp_func = lambda line: search_line(line)
+    elif len(argv) > 1 and argv[1] == '-s':
+        pattern = argv[2]
         
         comp_func = lambda line: pattern == line
 
