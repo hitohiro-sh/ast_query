@@ -73,11 +73,6 @@ class TrMem:
     def clone(self) -> object:
         return TrMem(self.func, list(self.trace))
 
-
-
-
-
-
 def tr(tree, depth, mem : TrMem):
     if not isinstance(tree, TerminalNode):
         mem.set(tree, depth)
@@ -91,7 +86,11 @@ def tr(tree, depth, mem : TrMem):
             tr(child, depth+1, mem.clone())    
 
 def main(argv):
-    input_stream = FileStream(argv[1])
+    if argv[1] == '--stdin':
+        input_stream = StdinStream()
+    else:
+        input_stream = FileStream(argv[1])
+
     lexer = Python3Lexer(input_stream)
     stream = CommonTokenStream(lexer)
     parser = Python3Parser(stream)
@@ -127,6 +126,6 @@ def main(argv):
         mem = TrMem(f)
 
     tr(tree, 0, mem)
- 
+
 if __name__ == '__main__':
     main(sys.argv)
