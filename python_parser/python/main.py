@@ -50,7 +50,7 @@ class ParseContextItem:
             self.start_line, self.stop_line]
 
     def __str__(self) -> str:
-        return to_str(self.tree)
+        return tree_to_str(self.tree)
         
 class TrMem:
     def __init__(self, func = None, trace = None) -> None:
