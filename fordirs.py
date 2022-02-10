@@ -2,7 +2,6 @@ import sys
 
 from pathlib import Path
 import subprocess
-from typing import Pattern
 
 def main(argv : list[str]):
     print(argv)
