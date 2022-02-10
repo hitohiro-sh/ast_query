@@ -106,7 +106,7 @@ def main(argv):
         depth = mem.depth
 
         #indent = ' ' * depth
-        print(json.dumps([{"indent": depth, "context_path": context_path_to_list(mem.trace)},tree_to_dict(tree)]))        
+        print(json.dumps([{"indent": depth, "context_path": context_path(mem.trace)},tree_to_dict(tree)]))        
 
     def f(mem):
         tree = mem.tree
